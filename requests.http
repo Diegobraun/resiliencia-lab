@@ -1,0 +1,49 @@
+@base = http://localhost:8080
+
+### transferência
+POST {{base}}/api/transferencias
+Content-Type: application/json
+X-Cliente: cliente-1
+Idempotency-Key: chave-123
+X-Prioridade: NORMAL
+X-Request-Timeout-Ms: 3000
+
+{"contaOrigem": "conta-1", "contaDestino": "conta-2", "valor": 100}
+
+### transferência que dispara compensação
+POST {{base}}/api/transferencias
+Content-Type: application/json
+X-Cliente: cliente-1
+Idempotency-Key: chave-compensacao
+
+{"contaOrigem": "conta-1", "contaDestino": "conta-inexistente", "valor": 50}
+
+### status de todos os mecanismos
+GET {{base}}/api/status
+
+### ligar chaos (campos parciais)
+PUT {{base}}/chaos
+Content-Type: application/json
+
+{"latenciaMs": 600, "celulasAfetadas": [0]}
+
+### desligar chaos
+DELETE {{base}}/chaos
+
+### reconciliação manual
+POST {{base}}/api/reconciliacao
+
+### mudar config no control plane
+PUT {{base}}/control-plane/config
+Content-Type: application/json
+
+{"valorMaximoTransferencia": 1000, "clientesFixados": {"cliente-vip": 2}}
+
+### canary
+POST {{base}}/api/rollout/iniciar
+
+### falha metastável
+GET {{base}}/api/metastavel/comparar
+
+### shuffle sharding
+GET {{base}}/api/shuffle-sharding/analise?clientes=10000

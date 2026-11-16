@@ -1,0 +1,72 @@
+server:
+  port: 8080
+  tomcat:
+    threads:
+      max: 400
+
+spring:
+  application:
+    name: resiliencia-lab
+  datasource:
+    url: jdbc:h2:mem:resiliencia;DB_CLOSE_DELAY=-1
+    username: sa
+    password: ""
+    hikari:
+      maximum-pool-size: 30
+  sql:
+    init:
+      mode: always
+
+app:
+  core:
+    url: ""
+    timeout-por-chamada-ms: 800
+    connect-timeout-ms: 300
+  deadline:
+    padrao-ms: 3000
+    maximo-ms: 5000
+    minimo-para-aceitar-ms: 50
+  retry:
+    max-tentativas: 3
+    backoff-base-ms: 50
+    backoff-teto-ms: 1000
+    budget-razao: 0.1
+    budget-maximo: 20
+  circuit-breaker:
+    janela: 20
+    minimo-chamadas: 10
+    taxa-falha: 0.5
+    tempo-aberto-ms: 5000
+    chamadas-meio-aberto: 3
+  bulkhead:
+    maximo-concorrente: 10
+  load-shedding:
+    limite-concorrencia: 30
+  shuffle-sharding:
+    workers: 8
+    tamanho-shard: 2
+    capacidade-por-worker: 4
+  celulas:
+    quantidade: 3
+  idempotencia:
+    expiracao-em-andamento-ms: 30000
+  outbox:
+    lote: 50
+    intervalo-ms: 500
+  broker:
+    capacidade-fila: 100
+  reconciliacao:
+    intervalo-ms: 15000
+    idade-minima-ms: 8000
+    deadline-ms: 3000
+  control-plane:
+    url: ""
+    intervalo-ms: 3000
+    timeout-ms: 500
+    cache-arquivo: target/config-cache.json
+    valor-maximo-padrao: 5000
+  rollout:
+    estagios: [5, 25, 50, 100]
+    duracao-estagio-ms: 10000
+    minimo-amostras: 10
+    margem-erro: 0.05
